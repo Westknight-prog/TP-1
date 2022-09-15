@@ -3,6 +3,7 @@
 // Étudiant College Lionel-Groulx 
 /////////////////////////////////////////////////////////////////////
 
+const path = require('path');
 const Math = require('../models/Math');
 const MathModel = require('../models/Math');
 const Repository = require('../models/repository');
@@ -39,125 +40,126 @@ module.exports =
             this.repository = new Repository(new MathModel());
         }
         get() {
-            let data =  this.HttpContext.path.params;
 
             if(this.HttpContext.path.queryString == "?"){
-                let helpPagePath = path.join(process.pwd(), "wwwroot/helpPages/mathServiceHelp.html");
+                let helpPagePath = path.join(process.cwd(), "wwwroot/helpPages/mathsServiceHelp.html");
                 let content = fs.readFileSync(helpPagePath);
                 this.HttpContext.response.content("text/html", content);
             }
-
-            if(data.op != null)
+            else
             {
-                switch (data.op){
+                let data =  this.HttpContext.path.params;
+                if(data.op != null)
+                {
+                    switch (data.op){
 
-                    // Addition (X + Y)
-                    case ' ' || '+': 
-                    data.op = '+';
-                        if( data.x != null && 
-                            data.y != null && 
-                            !isNaN(parseInt(data.x)) && 
-                            !isNaN(parseInt(data.y)) && 
-                            Object.keys(data).length === 3) {
+                        // Addition (X + Y)
+                        case ' ' || '+': 
+                        data.op = '+';
+                            if( data.x != null && 
+                                data.y != null && 
+                                !isNaN(parseInt(data.x)) && 
+                                !isNaN(parseInt(data.y)) && 
+                                Object.keys(data).length === 3) {
 
-                            data.value = "" + (parseInt(data.x) + parseInt(data.y));
-                        }
-                        else{
-                           
-                            data.error  = "Valeur invalide";
-                        }
-                        this.HttpContext.response.JSON(data);
-                        break;
+                                data.value = "" + (parseInt(data.x) + parseInt(data.y));
+                            }
+                            else{
+                            
+                                data.error  = "Valeur invalide";
+                            }
+                            this.HttpContext.response.JSON(data);
+                            break;
 
-                        // Soustraction (X - Y)
-                     case '-':
-                        if(!isNaN(parseInt(data.x)) && !isNaN(parseInt(data.y)) && Object.keys(data).length === 3){
-                            data.value = "" + (parseInt(data.x) - parseInt(data.y));
-                        }
-                        else{
-                            data.error  = "Valeur invalide";
-                        }
-                        this.HttpContext.response.JSON(data);
-                        break;
+                            // Soustraction (X - Y)
+                        case '-':
+                            if(!isNaN(parseInt(data.x)) && !isNaN(parseInt(data.y)) && Object.keys(data).length === 3){
+                                data.value = "" + (parseInt(data.x) - parseInt(data.y));
+                            }
+                            else{
+                                data.error  = "Valeur invalide";
+                            }
+                            this.HttpContext.response.JSON(data);
+                            break;
 
-                        // Multiplaction (X * Y)
-                     case '*':
-                        if(!isNaN(parseInt(data.x)) && !isNaN(parseInt(data.y))&& Object.keys(data).length === 3){
-                            data.value = "" + (parseInt(data.x) * parseInt(data.y));
-                        }
-                        else{
-                            data.error  = "Valeur invalide";
-                        }
-                        this.HttpContext.response.JSON(data);
-                        break;
+                            // Multiplaction (X * Y)
+                        case '*':
+                            if(!isNaN(parseInt(data.x)) && !isNaN(parseInt(data.y))&& Object.keys(data).length === 3){
+                                data.value = "" + (parseInt(data.x) * parseInt(data.y));
+                            }
+                            else{
+                                data.error  = "Valeur invalide";
+                            }
+                            this.HttpContext.response.JSON(data);
+                            break;
 
-                        // Division (X / Y)
-                     case '/':
-                        if(!isNaN(parseInt(data.x)) && !isNaN(data.y) && Object.keys(data).length === 3){
-                            data.value = "" + (parseInt(data.x) / parseInt(data.y));
-                        }
-                        else{
-                            data.error  = "Valeur invalide";
-                        }
-                        this.HttpContext.response.JSON(data);
-                        break;
+                            // Division (X / Y)
+                        case '/':
+                            if(!isNaN(parseInt(data.x)) && !isNaN(data.y) && Object.keys(data).length === 3){
+                                data.value = "" + (parseInt(data.x) / parseInt(data.y));
+                            }
+                            else{
+                                data.error  = "Valeur invalide";
+                            }
+                            this.HttpContext.response.JSON(data);
+                            break;
 
 
-                        // Modulo (X % Y)
-                    case '%':
-                        if(!isNaN(parseInt(data.x)) && !isNaN(parseInt(data.y)) && Object.keys(data).length === 3){
-                            data.value = "" + (parseInt(data.x) % parseInt(data.y));
-                        }
-                        else{
-                            data.error  = "Valeur invalide";
-                        }
-                        this.HttpContext.response.JSON(data);
-                        break;
+                            // Modulo (X % Y)
+                        case '%':
+                            if(!isNaN(parseInt(data.x)) && !isNaN(parseInt(data.y)) && Object.keys(data).length === 3){
+                                data.value = "" + (parseInt(data.x) % parseInt(data.y));
+                            }
+                            else{
+                                data.error  = "Valeur invalide";
+                            }
+                            this.HttpContext.response.JSON(data);
+                            break;
 
-                        // Factorielle (X!)
-                    case '!':
-                        if(isNaN(parseInt(data.n)) && data.n > 0 && Object.keys(data).length === 2){
-                            data.value = "" + CalcFactorial(parseInt(data.n)) 
-                        }
-                        else{
-                            data.error  = "Valeur invalide";
-                        }
-                        this.HttpContext.response.JSON(data);
-                        break;
+                            // Factorielle (X!)
+                        case '!':
+                            if(!isNaN(parseInt(data.n)) && data.n > 0 && Object.keys(data).length === 2){
+                                data.value = "" + CalcFactorial(parseInt(data.n)) 
+                            }
+                            else{
+                                data.error  = "Valeur invalide";
+                            }
+                            this.HttpContext.response.JSON(data);
+                            break;
 
-                        // Premier (X)
-                    case 'p':
-                        if(!isNaN(parseInt(data.n)) &&  data.n > 0 && Object.keys(data).length === 2){
-                            data.value = (IsPrime(data.n));
-                        }
-                        else{
-                            data.error  = "Valeur invalide";
-                        }
-                        this.HttpContext.response.JSON(data);
-                        break;
+                            // Premier (X)
+                        case 'p':
+                            if(!isNaN(parseInt(data.n)) &&  data.n > 0 && Object.keys(data).length === 2){
+                                data.value = (IsPrime(data.n));
+                            }
+                            else{
+                                data.error  = "Valeur invalide";
+                            }
+                            this.HttpContext.response.JSON(data);
+                            break;
 
-                        // N iem Premier
-                    case 'np':
-                        if(!isNaN(parseInt(data.n)) && data.n > 0 && Object.keys(data).length === 2){
-                            let listPrime = initListPrime();
-                            data.value = "" + listPrime[data.n-1];
-                        }
-                        else{
-                            data.error  = "Valeur invalide";
-                        }
-                        this.HttpContext.response.JSON(data);
-                        break;
+                            // N iem Premier
+                        case 'np':
+                            if(!isNaN(parseInt(data.n)) && data.n > 0 && Object.keys(data).length === 2){
+                                let listPrime = initListPrime();
+                                data.value = "" + listPrime[data.n-1];
+                            }
+                            else{
+                                data.error  = "Valeur invalide";
+                            }
+                            this.HttpContext.response.JSON(data);
+                            break;
 
-                    default :
-                        this.HttpContext.response.JSON(data);
-                        break;
+                        default :
+                            this.HttpContext.response.JSON(data);
+                            break;
 
+                    }
+                }else{
+                    data.error = "OP is missing";
+                    this.HttpContext.response.JSON(data);
                 }
-            }else{
-                data.error = "OP is missing";
-                this.HttpContext.response.JSON(data);
-            }
                 
-            
+            }
         }
     }
